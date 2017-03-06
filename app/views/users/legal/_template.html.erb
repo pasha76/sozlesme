@@ -1,0 +1,9 @@
+<% for tmp in @draftagreements %>
+    <tr class="odd gradeX">
+      <td><%= cmp_editable_text(tmp, "name")%></td>
+      <td><%=User.find(tmp.user_id).name%></td>
+      <td><%=Demand.find(tmp.demand_id).user.name%></td>
+      <td class="center"><%=tmp.created_at.strftime("%d/%m/%Y")%></td>
+      <td class="center"><%=link_to tmp.workflow_state,draftagreement_path(tmp)%>,<%=link_to "Kopyala",draftagreement_create_copy_path(tmp)%></td>
+    </tr>
+<% end %>

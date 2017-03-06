@@ -1,0 +1,160 @@
+<% content_for :head do %>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet">
+    <style>
+      .tokenfield {
+        height: 100%;
+      }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#agreement_emails').on('tokenfield:createtoken', function (e) {
+                var data = e.attrs.value.split('|')
+                e.attrs.value = data[1] || data[0]
+                e.attrs.label = data[1] ? data[0] + ' (' + data[1] + ')' : data[0]
+            }).on('tokenfield:createdtoken', function (e) {
+                    // Über-simplistic e-mail validation
+                    var re = /\S+@\S+\.\S+/
+                    var valid = re.test(e.attrs.value)
+                    if (!valid) {
+                        $(e.relatedTarget).addClass('invalid')
+                    }
+                }).on('tokenfield:edittoken', function (e) {
+                    if (e.attrs.label !== e.attrs.value) {
+                        var label = e.attrs.label.split(' (')
+                        e.attrs.value = label[0] + '|' + e.attrs.value
+                    }
+                }).tokenfield({
+                autocomplete: {
+                    source: <%=User.where(["company_id in (?)",[Demand.find(@draftagreement.demand_id).vendor_company_id,current_user.company_id,current_user.legal_company_id]]).map{|u|u.email}.to_s.html_safe%>,
+                    delay: 1
+                },
+                showAutocompleteOnFocus: true
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#agreement_email_tags').tagThis({
+                noDuplicates: true,
+                email: true,
+                defaultText: "Email girin."
+            });
+
+            $("#new_agreement").submit(function () {
+                var tags = $("#agreement_email_tags").data("tags");
+                var all_tags = "";
+                if (tags == undefined)return;
+                $.each(tags, function (key, value) {
+                    all_tags = all_tags + value['text'] + ","
+                });
+                all_tags = all_tags.slice(0, -1);
+                $("#agreement_emails").val(all_tags);
+            });
+
+        });
+
+    </script>
+<% end %>
+<div class="row">
+
+  <div class="col-lg-11">
+    <h1><%= @draftagreement.name %></h1>
+    <h6 class="text-muted">
+      <%= @draftagreement.agreement_type %></h6>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">Sözleşmeyi paylaşacağınız email'ları girin</div>
+
+      <%= form_for(@agreement, :html => {:role => 'form'}) do |f| %>
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="emails">Email adresleri</label>
+              <%= f.hidden_field :draftagreement_id, :value => @draftagreement.id %>
+              <%= f.text_area :emails %>
+            </div>
+          </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+<div class="row" id="publish_agreement">
+  <div class="col-lg-4">
+
+    <!-- Single button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Aksiyon al <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to "Sözleşmeyi yayınla", "#", onclick: "$('#new_agreement').submit()" %></li>
+        <li role="separator" class="divider"></li>
+        <li><%= link_to "Hukuk ekibine gönder", draftagreement_updatestatus_path(@draftagreement)+"?back=legal" %></li>
+      </ul>
+    </div>
+
+  </div>
+
+
+  &nbsp;
+</div>
+&nbsp;
+<% textbox_counter=0 %>
+<% i=0 %>
+<% for draftsection in @draftagreement.draftsections %>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+
+              <span class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#section-<%= draftsection.id %>" aria-expanded="true" aria-controls="collapseOne">
+                  <%= i+1 %>.&nbsp;<%= draftsection.name %>
+                </a>
+
+              </span>
+            </div>
+            <div id="section-<%= draftsection.id %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                <% x=1 %>
+                <% for draftterm in draftsection.draftterms %>
+
+                    <div class="row" id="anchor<%= textbox_counter %>">
+                      <div class="col-md-1"><%= i+1 %>.<%= x %></div>
+                      <div class="col-md-11">
+
+
+                        <%= raw draftterm.content %>
+                        <% textbox_counter=textbox_counter+1 %>
+
+
+                      </div>
+
+                    </div>
+                    <% x=x+1 %>
+                    &nbsp;
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <% i=i+1 %>
+<% end %>
+
+
+
+
+
+

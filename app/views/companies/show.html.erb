@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Firmaya kullanıcı ekle</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Kullanıcı ekle
+      </div>
+
+          <div class="panel-body">
+
+            <p>
+              <strong>Name:</strong>
+              <%= @company.name %>
+            </p>
+
+            <p>
+              <strong>Address:</strong>
+              <%= @company.address %>
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              <%= @company.email %>
+            </p>
+
+            <p>
+              <strong>Tax no:</strong>
+              <%= @company.tax_no %>
+            </p>
+
+            <%= link_to 'Edit', edit_company_path(@company) %> |
+            <%= link_to 'Back', companies_path %>
+          </div>
+
+    </div>
+  </div>
+</div>
+

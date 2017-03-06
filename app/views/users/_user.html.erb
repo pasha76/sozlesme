@@ -1,0 +1,18 @@
+<td>
+  <%= user['name'] %>
+</td>
+<td>
+  <%= link_to user.email, user %>
+</td>
+<td>
+  <a href="#" id="role" class="company" data-type="select" data-pk="<%= user.id %>" data-url="/users/<%= user.id %>" data-value="<%= User.roles[user.role] %>" data-source="<%= (User.roles.keys.map { |role| {text: role.titleize, value: User.roles[role]} }).to_json %>"></a>
+</td>
+<td>
+  <a href="#" id="company_id" class="company" data-type="select" data-pk="<%= user.id %>" data-url="/users/<%= user.id %>" data-value="<%= user.company_id %>" data-source="/companies"></a>
+</td>
+<td>
+  <a href="#" id="legal_company_id" class="company" data-type="select" data-pk="<%= user.id %>" data-url="/users/<%= user.id %>" data-value="<%= user.legal_company_id %>" data-source="/companies"></a>
+</td>
+<td>
+  <%= link_to("Sil", user_path(user), :data => {:confirm => "Emin misin?"}, :method => :delete, :class => 'button-xs') unless user == current_user %>
+</td>

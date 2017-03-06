@@ -1,0 +1,62 @@
+<div class="btn-group" role="group" aria-label="...">
+
+  <button type="button" class="btn btn-default">
+    <i onclick="document.execCommand('bold', null, false);" class="fa fa-bold" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="btn btn-default">
+    <i onclick="document.execCommand('italic', null, false);" class="fa fa-italic" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="btn btn-default">
+    <i onclick="document.execCommand('underline', null, false);" class="fa fa-underline" aria-hidden="true"></i>
+  </button>
+</div>
+&nbsp;
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default">
+    <i onclick="document.execCommand('formatBlock', null, '<h3>');" class="fa fa-header" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="btn btn-default">
+    <i onclick="document.execCommand('formatBlock', null, '<p>');" class="fa fa-paragraph" aria-hidden="true"></i>
+  </button>
+</div>
+&nbsp;
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default" onclick="document.execCommand('indent', null, false);">
+    <i class="fa fa-indent" aria-hidden="true"></i></button>
+  <button type="button" class="btn btn-default" onclick="document.execCommand('outdent', null, false);">
+    <i class="fa fa-outdent" aria-hidden="true"></i>
+  </button>
+</div>
+&nbsp;
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertUnorderedList', null, false);">
+    <i class="fa fa-list-ul" aria-hidden="true"></i></button>
+  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertOrderedList', null, false);">
+    <i class="fa fa-list-ol" aria-hidden="true"></i></button>
+
+</div>
+&nbsp;
+<div class="btn-group" role="group" aria-label="...">
+  <input onchange="javascript:toggleDel(this,<%= textbox_counter %>)" class="btn btn-default" type="checkbox" data-toggle="toggle" data-off="Geçmişi göster" data-on="Şimdiki hali">
+</div>
+
+&nbsp;
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-floppy-o" aria-hidden="true"></i> Kaydet <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= term.id %>" class="saveDraft">Taslak</a>
+    </li>
+    <li role="separator" class="divider"></li>
+    <li>
+      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= term.id %>" class="saveApproved">Onaylı</a>
+    </li>
+  </ul>
+</div>
+
+<button type="button" class="btn btn-default" onclick="javascript:replaceSelectedText();">
+  <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Not ekle
+</button>
+</div>

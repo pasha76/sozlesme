@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header"><%= current_user.name %></h1>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<%= render "users/legal/numbers" %>
+
+<!-- /.row -->
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-lg-3">
+            Sözleşme taslakları
+          </div>
+          <div class="col-lg-offset-7 col-lg-2">
+            <a class="btn btn-success btn-xs" href="/drafts">Yeni taslak</a>
+          </div>
+        </div>
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+          <thead>
+          <tr>
+            <th>Sözleşme tipi</th>
+            <th>Hazırlayan</th>
+            <th>Talep eden</th>
+            <th>Hazırlanma tarihi</th>
+            <th>Durum</th>
+          </tr>
+          </thead>
+          <tbody>
+
+            <%=render "users/legal/template"%>
+
+          </tbody>
+        </table>
+
+
+      </div>
+      <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+
+
+  </div>
+  <!-- /.col-lg-8 -->
+  <div class="col-lg-4">
+
+    <%=render "users/legal/demand"%>
+    <!-- /.panel -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
+      </div>
+      <div class="panel-body">
+        <div id="morris-donut-chart"></div>
+        <a href="#" class="btn btn-default btn-block">View Details</a>
+      </div>
+      <!-- /.panel-body -->
+    </div>
+    <%=render "users/legal/notification"%>
+  </div>
+  <!-- /.col-lg-4 -->
+</div>
+<!-- /.row -->
+
+<script>
+    $(document).ready(function () {
+        $('#dataTables-example').DataTable({
+            responsive: false
+        });
+    });
+</script>

@@ -1,0 +1,238 @@
+<% content_for :head do %>
+    <style>
+      .btn-file {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+      }
+
+      #uploads .block {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        width: 100px;
+        height: 100px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #CCCCCC;
+      }
+
+      #progressBar {
+        background-color: #3E6FAD;
+        width: 0px;
+        height: 30px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -moz-transition: .25s ease-out;
+        -webkit-transition: .25s ease-out;
+        -o-transition: .25s ease-out;
+        transition: .25s ease-out;
+      }
+
+      #uploads .block .progressBar {
+        background-color: #3E6FAD;
+        width: 0px;
+        height: 5px;
+        margin-top: 47px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -moz-transition: .25s ease-out;
+        -webkit-transition: .25s ease-out;
+        -o-transition: .25s ease-out;
+        transition: .25s ease-out;
+      }
+
+      #uploads .block .cancelButton {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 25px;
+        height: 25px;
+        background-color: black;
+        border: 2px solid white;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        -moz-border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -o-border-radius: 25px;
+        border-radius: 25px;
+        -moz-box-shadow: 0px 0px 10px 0px #C4C4C4;
+        -webkit-box-shadow: 0px 0px 10px 0px #C4C4C4;
+        -o-box-shadow: 0px 0px 10px 0px #C4C4C4;
+        box-shadow: 0px 0px 10px 0px #C4C4C4;
+        cursor: pointer;
+      }
+
+      #uploads .block .format {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 34px;
+      }
+
+      #uploads .block .error {
+        text-align: left;
+        font-size: 14px;
+        color: red;
+      }
+    </style>
+<% end %>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Talebiniz alındı</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Talep size gönderildi
+      </div>
+      <div class="panel-body">
+        <p><%= @question.content %></p>
+
+        <hr>
+        <div class="row text-muted">
+          <div class="col-lg-8">
+            İlgili kişiler: <%= @demand.users.map { |u| u.email }.to_sentence(two_words_connector: ', ') %>
+          </div>
+        </div>
+        <hr>
+        <div class="row text-muted">
+          <div class="col-lg-1">
+            Yazan:
+          </div>
+          <div class="col-lg-2">
+            <p><%= @demand.user.name %></p>
+          </div>
+          <div class="col-lg-1">
+            Tarih:
+          </div>
+          <div class="col-lg-2">
+            <%= @demand.created_at.strftime("%d/%m/%Y") %>
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <%= link_to "Talebi kapat", question_close_path(@question), class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <% comments=@question.comments %>
+    <%= form_for(Comment.new, method: "post", :html => {:role => 'form'}) do |f| %>
+        <div class="form-group form-inline">
+          <%= f.text_area :comment, :class => "form-control", style: "min-width:75%;", :rows => "1" %>
+          <%= f.hidden_field :question_id, value: @question.id %>
+          <%= f.hidden_field :demand_id, value: @question.demand_id %>
+          <%= button_tag(type: 'submit', class: "btn btn-success") do %>
+              <i class="fa fa-commenting-o fa-fw fa-1x"></i> Yorum yaz
+          <% end %>
+        </div>
+
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <% if comments.count>0 %>
+
+        <ul class="timeline">
+          <% for comment in comments %>
+              <li <%= comment.role=="legal" ? ''.html_safe : 'class="timeline-inverted"'.html_safe %>>
+                <div <%= comment.role=="legal" ? 'class="timeline-badge warning"'.html_safe : 'class="timeline-badge info"'.html_safe %>>
+                  <i class="fa fa-comments"></i>
+                </div>
+                <div class="timeline-panel">
+                  <div class="timeline-heading">
+                    <b class="timeline-title"><%= comment.user.name %></b>
+                    <small class="text-muted">
+                      <i class="fa fa-clock-o"></i> <%= comment.created_at.strftime("%d/%m%Y") %>
+                    </small>
+
+                  </div>
+                  <div class="timeline-body">
+                    <p><%= comment.comment %></p>
+                  </div>
+                </div>
+              </li>
+
+          <% end %>
+
+        </ul>
+    <% end %>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".role").click(function () {
+            $("#demand_to_role").val($(this).attr("to-role"));
+            $("#new_demand").submit();
+        });
+
+
+        $('input[type=file]').change(function () {
+
+            $(this).simpleUpload("/demands/upload", {
+
+                start: function (file) {
+                    //upload started
+                    $('#filename').html(file.name);
+                    $('#progress').html("");
+                    $('#progressBar').width(0);
+                },
+
+                progress: function (progress) {
+                    //received progress
+                    $('#progress').html("Yüklenen: " + Math.round(progress) + "%");
+                    $('#progressBar').width(progress + "%");
+                },
+
+                success: function (data) {
+                    //upload successful
+                    $('#progress').html("Başarılı şekilde yüklendi.");
+                },
+
+                error: function (error) {
+                    //upload failed
+                    $('#progress').html("Yüklendmedi!<br>" + error.name + ": " + error.message);
+                }
+
+            });
+
+        });
+
+    });
+
+</script>

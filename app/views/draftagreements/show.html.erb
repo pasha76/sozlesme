@@ -1,0 +1,328 @@
+<script src="http://code.jquery.com/jquery-migrate-1.0.0.js"></script>
+
+<div class="modal fade " id="search-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Sözleşme maddesi ekleme</h4>
+      </div>
+      <div class="modal-body">
+        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-terms">
+          <thead>
+          <tr>
+            <th>Madde içeriği</th>
+            <th>Konusu</th>
+            <th>Anahtar kelimeler</th>
+            <th>Hazırlayan</th>
+            <!--<th>Hazırlanma tarihi</th>-->
+            <th>Aksiyon</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <%= render "draftagreements/terms" %>
+
+          </tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="row">
+
+  <div class="col-lg-11">
+    <h1>
+      <a id="name" class="editable" data-pk="<%= @draftagreement.id %>" data-value="<%= @draftagreement.name %>" data-url="/draftagreements/<%= @draftagreement.id %>"></a>
+    </h1>
+    <h6 class="text-muted">
+      <i id="agreement-light" class="fa fa-circle" aria-hidden="true"></i><%= @draftagreement.agreement_type %></h6>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">Sözleşme bölümlerini ekle</div>
+
+      <%= form_for(@draftsection, :html => {:role => 'form'}) do |f| %>
+          <div class="panel-body">
+
+            <%= f.hidden_field :draftagreement_id, :value => @draftagreement.id %>
+
+            <%= select_tag "draftsection[name]", options_from_collection_for_select(@sectiontemplates, "id", "name"), class: "selectpicker", "data-live-search" => "true" %> <!--:multiple=>"","data-live-search"=>"true", "data-selected-text-format"=>"count"%>-->
+
+            &nbsp;
+            <%= f.submit 'Taslağa ekle ', :class => 'btn btn-success right ' %>
+
+          </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+<div class="row" id="publish_agreement">
+  <div class="col-lg-4">
+    <%= link_to "Sözleşmeyi yayınla", draftagreement_updatestatus_path(@draftagreement), class: "btn btn-danger" %>
+  </div>
+  &nbsp;
+</div>
+
+<% textbox_counter=0 %>
+<% i=0 %>
+<% for draftsection in @draftagreement.draftsections.order("draftsections.order_no asc") %>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+
+              <span class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#section-<%= draftsection.id %>" aria-expanded="true" aria-controls="collapseOne">
+                  <%=cmp_editable_text(draftsection,"order_no")  %>.&nbsp;<%=cmp_editable_text( draftsection,"name") %>
+                </a>
+
+              </span>
+              <button type="button" class="btn btn-primary btn-xs pull-right search-terms" section-id="<%= draftsection.id %>" data-toggle="modal" data-target="#search-modal">
+                Sözleşme maddesi ekle
+              </button>
+
+            </div>
+            <div id="section-<%= draftsection.id %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                <% x=1 %>
+                <% for draftterm in draftsection.draftterms.order("draftterms.order_no asc") %>
+
+                    <div class="row" id="anchor<%= textbox_counter %>">
+                      <div class="col-md-1"><%= draftsection.order_no %>.<%= cmp_editable_text(draftterm,"order_no") %></div>
+                      <div class="col-md-11">
+                        <div class="panel panel-default">
+                          <div class="panel-body visible-button">
+
+                            <div class="row " style="height: 25px !important;">
+                              <div class="col-lg-1">
+                                <i id="light-<%= textbox_counter %>" class="fa fa-circle  <%= draftterm.status=="published" ? 'alert-success' : 'alert-danger' %>" aria-hidden="true"></i>
+                              </div>
+
+                              <div class="col-lg-11 hidden-button">
+                                <div class="btn-group" role="group" aria-label="...">
+
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('bold', null, false);" class="fa fa-bold" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('italic', null, false);" class="fa fa-italic" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('underline', null, false);" class="fa fa-underline" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('formatBlock', null, '<h3>');" class="fa fa-header" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('formatBlock', null, '<p>');" class="fa fa-paragraph" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('indent', null, false);">
+                                    <i class="fa fa-indent" aria-hidden="true"></i></button>
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('outdent', null, false);">
+                                    <i class="fa fa-outdent" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertUnorderedList', null, false);">
+                                    <i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertOrderedList', null, false);">
+                                    <i class="fa fa-list-ol" aria-hidden="true"></i></button>
+
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <input onchange="javascript:toggleDel(this,<%= textbox_counter %>)" class="btn btn-default" type="checkbox" data-toggle="toggle" data-off="Geçmişi göster" data-on="Şimdiki hali">
+                                </div>
+
+                                &nbsp;
+                                <!-- Single button -->
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Kaydet <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <li>
+                                      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= draftterm.id %>" class="saveDraft">Taslak</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= draftterm.id %>" class="saveApproved">Onaylı</a>
+                                    </li>
+                                  </ul>
+                                </div>
+
+
+                              </div>
+
+                            </div>
+
+                            <div id="content">
+                              <div id="text-wrapper">
+
+                                <div id="textbody<%= textbox_counter %>" class="text-box">
+                                  <p><%= raw draftterm.content %></p>
+                                </div>
+                                <% textbox_counter=textbox_counter+1 %>
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <% x=x+1 %>
+                    &nbsp;
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <% i=i+1 %>
+<% end %>
+<script type="text/javascript">
+    window.tracker = [];
+    $(function () {
+        var text = [];
+        for (i = 0; i < <%=textbox_counter%>; i++) {
+            text[i] = document.getElementById('textbody' + i);
+            window.tracker[i] = new ice.InlineChangeEditor({
+                element: text[i],
+                handleEvents: true,
+                currentUser: {id: <%=User.roles[current_user.role]%>, name: '<%=current_user.name%>'},
+                plugins: ['IceAddTitlePlugin', 'IceSmartQuotesPlugin', 'IceEmdashPlugin', {
+                    name: 'IceCopyPastePlugin',
+                    settings: {
+                        pasteType: 'formattedClean',
+                        preserve: 'p,a[href],i,em,b,span,ul,ol,li,hr'
+                    }
+                }
+                ]
+            }).startTracking();
+        }
+
+    });
+
+    function setUser(el, i) {
+        var name = $(el).find(':selected').data('username');
+        var id = $(el).find(':selected').data('userid');
+        tracker[i].setCurrentUser({id: id, name: name});
+    }
+
+    function toggleApprove(el, i) {
+        if ($(el).prop('checked')) {
+            tracker[i].acceptAll();
+        } else {
+            tracker[i].rejectAll();
+        }
+    }
+
+
+    function toggleDel(el, i) {
+        var body = document.getElementById('textbody' + i);
+        var button = $(el);
+        if ($(body).hasClass('CT-hide')) {
+            $(body).removeClass('CT-hide');
+        } else {
+            $(body).addClass('CT-hide');
+        }
+    }
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#dataTables-terms').DataTable({
+            responsive: false
+        });
+        $('.search-terms').click(function () {
+            var section_id = $(this).attr("section-id");
+            $(".section_id").val(section_id);
+        });
+
+        $(".saveApproved").click(function () {
+            var text_box_id = $(this).attr("text-box-id");
+            tracker[text_box_id].acceptAll();
+
+            $.ajax({
+                type: "PUT",
+                url: "/draftterms/" + $(this).attr("draftterm-id"),
+                data: {content: tracker[text_box_id].getCleanContent(), status: "published"},
+                success: function (data) {
+                    $("#notice").html("Madde onaylı şekilde kayıt edilmiştir.");
+                    $("#light-" + text_box_id).removeClass("alert-danger");
+                    $("#light-" + text_box_id).addClass("alert-success");
+                    toggle_agreement_light();
+
+                }
+            });
+        });
+        function toggle_agreement_light() {
+            if ($("i[id^='light'].alert-danger").length > 0 || $("i[id^='light'].alert-success").length == 0) {
+                $("#agreement-light").addClass("alert-danger");
+                $("#agreement-light").removeClass("alert-success");
+                $("#publish_agreement").hide();
+            } else {
+                $("#agreement-light").removeClass("alert-danger");
+                $("#agreement-light").addClass("alert-success");
+                $("#publish_agreement").show();
+            }
+        }
+
+        $(".saveDraft").click(function () {
+            var text_box_id = $(this).attr("text-box-id");
+            $.ajax({
+                type: "PUT",
+                url: "/draftterms/" + $(this).attr("draftterm-id"),
+                data: {content: tracker[text_box_id].getElementContent(), status: "open"},
+                success: function (data) {
+                    $("#notice").html("Madde onaylı şekilde kayıt edilmiştir.");
+                    $("#light-" + text_box_id).addClass("alert-danger");
+                    $("#light-" + text_box_id).removeClass("alert-success");
+                    toggle_agreement_light();
+
+                }
+            });
+        });
+        $('.selectpicker').selectpicker();
+        $(".hidden-button").hide();
+        toggle_agreement_light();
+        $(".visible-button").hover(function () {
+            $(this).find(".col-lg-11").show();
+            //$(".hidden-button").show();
+        }, function () {
+            $(this).find(".col-lg-11").hide();
+            //$(".hidden-button").hide();
+        });
+    });
+</script>
+
+
+

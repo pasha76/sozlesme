@@ -1,0 +1,13 @@
+<% if user_signed_in? %>
+    <li><%= link_to 'Hesabı yönet', edit_user_registration_path %></li>
+    <li><%= link_to 'Çıkış', destroy_user_session_path, :method => 'delete' %></li>
+<% else %>
+    <li><%= link_to 'Giriş', new_user_session_path %></li>
+    <li><%= link_to 'Kayıt ol', new_user_registration_path %></li>
+<% end %>
+<% if user_signed_in? %>
+    <% if current_user.try(:admin?) %>
+        <li><%= link_to 'Kullanıcılar', users_path %></li>
+        <li><%= link_to 'Firmalar', new_company_url %></li>
+    <% end %>
+<% end %>

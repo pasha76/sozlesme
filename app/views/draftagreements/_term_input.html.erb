@@ -1,0 +1,85 @@
+<div id="section-<%= draftsection.id %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+  <div class="panel-body">
+    <%x=1%>
+    <% for draftterm in draftsection.draftterms %>
+
+        <div class="row">
+          <div class="col-md-1"><%= i+1 %>.<%=x%></div>
+          <div class="col-md-11">
+            <div class="panel panel-default">
+              <div class="panel-body">
+
+                <div class="row ">
+                  <div class="col-lg-12">
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button type="button" class="btn btn-default">
+                        <i onclick="document.execCommand('bold', null, false);" class="fa fa-bold" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" class="btn btn-default">
+                        <i onclick="document.execCommand('italic', null, false);" class="fa fa-italic" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" class="btn btn-default">
+                        <i onclick="document.execCommand('underline', null, false);" class="fa fa-underline" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    &nbsp;
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button type="button" class="btn btn-default">
+                        <i onclick="document.execCommand('formatBlock', null, '<h3>');" class="fa fa-header" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" class="btn btn-default">
+                        <i onclick="document.execCommand('formatBlock', null, '<p>');" class="fa fa-paragraph" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    &nbsp;
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button type="button" class="btn btn-default" onclick="document.execCommand('indent', null, false);">
+                        <i class="fa fa-indent" aria-hidden="true"></i></button>
+                      <button type="button" class="btn btn-default" onclick="document.execCommand('outdent', null, false);">
+                        <i class="fa fa-outdent" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    &nbsp;
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button type="button" class="btn btn-default" onclick="document.execCommand('InsertUnorderedList', null, false);">
+                        <i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                      <button type="button" class="btn btn-default" onclick="document.execCommand('InsertOrderedList', null, false);">
+                        <i class="fa fa-list-ol" aria-hidden="true"></i></button>
+
+                    </div>
+                    &nbsp;
+                    <div class="btn-group" role="group" aria-label="...">
+                      <input onchange="javascript:toggleDel(this,<%= textbox_counter %>)" class="btn btn-default" type="checkbox" data-toggle="toggle" data-off="Geçmişi göster" data-on="Şimdiki hali">
+
+                      <select onchange="setUser(this,<%= textbox_counter %>)" class="hide">
+                        <option data-userid="11" data-username="Geoffrey Jellineck">Geoffrey Jellineck
+                        </option>
+                        <option data-userid="22" data-username="Chuck Noblet">Chuck Noblet</option>
+                        <option data-userid="33" data-username="Jerri Blank">Jerri Blank</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+
+
+              </div>
+
+              <div id="content">
+                <div id="text-wrapper">
+
+                  <div id="textbody<%= textbox_counter %>" class="text-box">
+                    <p><%= raw draftterm.content %></p>
+                  </div>
+                  <%textbox_counter=textbox_counter+1%>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <%x=x+1%>
+        &nbsp;
+    <% end %>
+  </div>
+</div>

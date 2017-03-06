@@ -1,0 +1,67 @@
+<style>
+  @media all and (max-width: 480px)  {
+    .half {
+      float: left !important;
+      width: 50% !important;
+    }
+  }
+</style>
+
+<div class="row">
+
+  <div class="col-lg-11">
+    <h1><%= @agreement.name %></h1>
+  </div>
+</div>
+
+&nbsp;
+<% textbox_counter=0 %>
+<% i=0 %>
+<% for section in @agreement.sections %>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+
+              <span class="panel-title">
+                <a role="button" data-toggle="collapse"  aria-expanded="true" aria-controls="collapseOne">
+                  &nbsp;<h3><%= i+1 %>.<%= section.name %></h3>
+                </a>
+
+              </span>
+            </div>
+            <div id="section-<%= section.id %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                <% x=1 %>
+                <% for term in section.terms %>
+
+                    <div class="row" id="anchor<%= textbox_counter %>">
+                      <div class="col-md-1"><%= i+1 %>.<%= x %></div>
+                      <div class="col-md-5 ">
+
+                        <%= raw term.content %>
+                        <% textbox_counter=textbox_counter+1 %>
+
+
+                      </div>
+
+                    </div>
+                    <% x=x+1 %>
+                    &nbsp;
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <% i=i+1 %>
+<% end %>
+
+
+
+
+
+

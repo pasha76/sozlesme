@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Kullanıcılar</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-3">
+            Kullanıcı listesi
+          </div>
+          <div class="pull-right">
+            <a class="btn btn-sm btn-success" href="<%=new_user_path%>">Yeni kullanıcı ekle</a>
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-body">
+        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-users">
+          <thead>
+          <tr>
+            <th>Kullanıcı adı</th>
+            <th>Email</th>
+            <th>Rolu</th>
+            <th>Firması</th>
+            <th>Hukuk firması</th>
+            <th>Aksiyon</th>
+
+          </tr>
+          </thead>
+          <tbody>
+
+          <% @users.each do |user| %>
+              <tr>
+                <%= render user %>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $.fn.editable.defaults.ajaxOptions = {type: "put"}
+    $.fn.editable.defaults.mode = 'inline';
+    $(document).ready(function () {
+        $('#dataTables-users').DataTable({
+            responsive: false
+        });
+    });
+    $('.selectpicker').selectpicker();
+    $('.company').editable({
+        showbuttons: false
+    });
+
+</script>

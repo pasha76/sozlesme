@@ -1,0 +1,2 @@
+module DrafttermsHelper
+end

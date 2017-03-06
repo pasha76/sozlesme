@@ -1,0 +1,9 @@
+<% for tmp in templates %>
+    <tr class="odd gradeX">
+      <td><%= cmp_editable_text(tmp, "name")%></td>
+      <td><%=tmp.users.map{|u|u.name}.to_sentence(two_words_connector: ', ')%></td>
+      <td><%=tmp.demand.user.name%></td>
+      <td class="center"><%=tmp.created_at.strftime("%d/%m/%Y")%></td>
+      <td class="center"><%=link_to tmp.workflow_state,agreement_path(tmp)%></td>
+    </tr>
+<% end %>

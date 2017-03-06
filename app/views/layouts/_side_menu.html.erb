@@ -1,0 +1,98 @@
+<div class="navbar-default sidebar" role="navigation">
+  <div class="sidebar-nav navbar-collapse">
+    <ul class="nav" id="side-menu">
+
+      <% if current_user.legal? %>
+          <li>
+            <a href="/users/legal_dashboard"><i class="fa fa-tachometer fa-fw"></i>&nbsp;Ana sayfa</a>
+          </li>
+          <li>
+            <a href="<%= demands_path %>"><i class="fa fa-envelope-o fa-fw"></i>&nbsp;Talepler</a>
+          </li>
+
+          <li>
+            <a href="<%= new_draftagreement_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Taslak sözleşme oluştur</a>
+          </li>
+
+          <li>
+            <a href="<%= agreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Paylaşılmış sözleşmeler</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa fa-newspaper-o fa-fw"></i> Sözleşme taslakları <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="<%= draftagreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Devam eden taslaklar</a>
+              </li>
+              <li>
+                <a href="<%= feedback_agreements_draftagreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Yorum
+                  alınan taslaklar</a>
+
+              </li>
+              <li>
+                <a href="<%= published_agreements_draftagreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Tamamlanmış
+                  taslaklar</a>
+
+              </li>
+
+            </ul>
+            <!-- /.nav-second-level -->
+          </li>
+
+
+          <li>
+            <a href="#"><i class="fa fa-newspaper-o fa-fw"></i> Sözleşme kütüphanesi <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="<%= agreementtemplates_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Tipleri</a>
+              </li>
+              <li>
+                <a href="<%= sectiontemplates_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Bölümleri</a>
+              </li>
+              <li>
+                <a href="<%= termtemplates_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Maddeleri</a>
+              </li>
+
+            </ul>
+            <!-- /.nav-second-level -->
+          </li>
+
+          </ul>
+          <!-- /.nav-second-level -->
+          </li>
+
+      <% end %>
+
+      <% if current_user.user? %>
+          <li>
+            <a href="/users/user_dashboard"><i class="fa fa-tachometer fa-fw"></i>&nbsp;Ana sayfa</a>
+          </li>
+          <li>
+            <a href="<%= new_demand_path %>"><i class="fa fa-envelope-o fa-fw"></i>&nbsp;Talep girin</a>
+          </li>
+          <li>
+            <%= link_to demands_path do %>
+                <i class="fa fa-envelope-o fa-fw"></i>&nbsp;Taleplerim
+            <% end %>
+          </li>
+          <li>
+            <a href="<%= draftagreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Taslak sözleşme incele</a>
+          </li>
+
+          <li>
+            <a href="<%= agreements_path %>"><i class="fa fa-edit fa-fw"></i>&nbsp;Tamamlanmış sözleşmeler</a>
+          </li>
+
+          <li>
+            <a href="<%= termtemplates_path %>"><i class="fa fa-edit fa-fw"></i>Sözleşme&nbsp;Maddeleri</a>
+          </li>
+          </ul>
+          <!-- /.nav-second-level -->
+          </li>
+
+      <% end %>
+      </ul>
+      </div>
+  <!-- /.sidebar-collapse -->
+</div>
+<!-- /.navbar-static-side -->
+</nav>

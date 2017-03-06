@@ -1,0 +1,24 @@
+<% for tmp in @templates %>
+    <tr class="odd gradeX">
+      <td>
+        <div class="div-text">
+        <%= raw tmp.content %></td>
+      </div>
+
+      <td>
+        <div class="div-text">
+          <%= cmp_editable_text(tmp, "subject")%>
+        </div>
+      </td>
+      <td>
+        <div class="div-text">
+          <%= cmp_editable_text(tmp, "keywords")%>
+        </div>
+      </td>
+      <td><%= User.find(tmp.user_id).name %></td>
+      <!--<td class="center"><%= tmp.created_at.strftime("%d/%m/%Y") %></td>-->
+      <td class="center"><a class="btn btn-xs btn-success" href="/termtemplates/<%= tmp.id %>/deactivate">Kaldır</a>
+      </td>
+
+    </tr>
+<% end %>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "Rails Devise Pundit" %></title>
+  <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Rails Devise Pundit" %>">
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <%= yield :head %>
+</head>
+<body>
+
+
+<header>
+  <%= render 'layouts/navigation' %>
+</header>
+
+
+<div id="wrapper">
+
+  <% if user_signed_in? %>
+      <%= render "layouts/side_menu" %>
+  <% end %>
+
+  <div id="page-wrapper">
+
+    <%= render 'layouts/messages' %>
+    <%= yield %>
+  </div>
+  <!-- /#page-wrapper -->
+
+</div>
+<script>
+    $(document).ready(function () {
+        $.fn.editable.defaults.ajaxOptions = {type: "put"}
+        $.fn.editable.defaults.mode = 'inline';
+        $(".editable").editable({
+            showbuttons: false,
+            emptytext:"Giriş yapın."
+        });
+        $('.selectpicker').selectpicker();
+
+    });
+</script>
+<%=yield :body%>
+</body>
+</html>

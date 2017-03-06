@@ -1,0 +1,41 @@
+<div class="authform">
+  <h3>Düzenle <%= resource_name.to_s.humanize %></h3>
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :role => 'form'}) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="form-group">
+      <%= f.label :name,"İsim" %>
+      <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: 'form-control' %>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Doğrulama bekleniyor: <%= resource.unconfirmed_email %></div>
+      <% end %>
+    </div>
+    <fieldset>
+      <p>Şifreni değiştirmek istemiyorsan alanları boş bırak.</p>
+      <div class="form-group">
+        <%= f.label :password,"Şifre" %>
+        <%= f.password_field :password, :autocomplete => 'off', class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :password_confirmation,"Şifre doğrula" %>
+        <%= f.password_field :password_confirmation, class: 'form-control' %>
+      </div>
+    </fieldset>
+    <fieldset>
+      <p>Değişiklik yapmaki için şuanki şifreni girmelisiniz.</p>
+      <div class="form-group">
+        <%= f.label :current_password,"Şimdiki şifren" %>
+        <%= f.password_field :current_password, class: 'form-control' %>
+      </div>
+    </fieldset>
+    <%= f.submit 'Değiştir', :class => 'button right' %>
+  <% end %>
+</div>
+<div class="authform">
+<h3>Hesabı sil</h3>
+<p>Üzgünüz! Geri gelmenizi ümitediyoruz.</p>
+<%= button_to "Hesabımı sil", registration_path(resource_name), :data => { :confirm => "Emin misin?" }, :method => :delete, :class => 'button right' %>
+</div>

@@ -1,0 +1,433 @@
+<%=content_for :head do%>
+<script src="http://code.jquery.com/jquery-migrate-1.0.0.js"></script>
+
+<style>
+  .note {
+    background-color: yellow;
+  }
+
+  .popup-note {
+    display: none;
+    padding: 20px;
+    border: 1px solid #333;
+    background: #464646;
+    float: left;
+    position: absolute;
+    z-index: 2;
+    color: #fff;
+  }
+
+</style>
+<% end %>
+<div class="modal fade" tabindex="-1" role="dialog" id="notebook">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Notunuzu girin</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="thenote">Not</label>
+          <textarea class="form-control" id="thenote" placeholder="Not veya uyarınızı girin..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+        <button type="button" class="btn btn-primary" id="notesave">Notu kaydet</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="row">
+
+  <div class="col-lg-11">
+    <h1>
+      <%= cmp_editable_text(@draftagreement, "name")%>
+    </h1>
+    <h6 class="text-muted">
+      <i id="agreement-light" class="fa fa-circle" aria-hidden="true"></i><%= @draftagreement.agreement_type %></h6>
+  </div>
+</div>
+
+<% if current_user.user? %>
+    <div class="row" id="publish_agreement">
+      <div class="col-lg-4">
+        <%= link_to "Sözleşmeyi onayla", draftagreement_updatestatus_path(@draftagreement), class: "btn btn-danger" %>
+      </div>
+    </div>
+    &nbsp;
+<% end %>
+
+<% textbox_counter=0 %>
+<% i=0 %>
+<% for draftsection in @draftagreement.draftsections.order("draftsections.order_no asc") %>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+
+              <span class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#section-<%= draftsection.id %>" aria-expanded="true" aria-controls="collapseOne">
+                  <%=cmp_editable_text(draftsection,"order_no")  %>.&nbsp;<%=cmp_editable_text draftsection,"name" %>
+                </a>
+
+              </span>
+
+
+            </div>
+            <div id="section-<%= draftsection.id %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                <% x=1 %>
+                <% for @draftterm in draftsection.draftterms.order("draftterms.order_no asc") %>
+
+                    <div class="row" id="anchor<%= textbox_counter %>">
+                      <div class="col-md-1"><%= draftsection.order_no %>.<%= cmp_editable_text(@draftterm,"order_no") %></div>
+                      <div class="col-md-11">
+                        <div class="panel panel-default">
+                          <div class="panel-body visible-button">
+
+                            <div class="row " style="height: 40px !important;">
+                              <div class="col-lg-1">
+                                <i id="light-<%= textbox_counter %>" class="fa fa-circle  <%= @draftterm.status=="published" ? 'alert-success' : 'alert-danger' %>" aria-hidden="true"></i>
+                              </div>
+
+                              <div class="col-lg-11 hidden-button">
+                                <div class="btn-group" role="group" aria-label="...">
+
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('bold', null, false);" class="fa fa-bold" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('italic', null, false);" class="fa fa-italic" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('underline', null, false);" class="fa fa-underline" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('formatBlock', null, '<h3>');" class="fa fa-header" aria-hidden="true"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-default">
+                                    <i onclick="document.execCommand('formatBlock', null, '<p>');" class="fa fa-paragraph" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('indent', null, false);">
+                                    <i class="fa fa-indent" aria-hidden="true"></i></button>
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('outdent', null, false);">
+                                    <i class="fa fa-outdent" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertUnorderedList', null, false);">
+                                    <i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                  <button type="button" class="btn btn-default" onclick="document.execCommand('InsertOrderedList', null, false);">
+                                    <i class="fa fa-list-ol" aria-hidden="true"></i></button>
+
+                                </div>
+                                &nbsp;
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <input onchange="javascript:toggleDel(this,<%= textbox_counter %>)" class="btn btn-default" type="checkbox" data-toggle="toggle" data-off="Geçmişi göster" data-on="Şimdiki hali">
+                                </div>
+
+                                &nbsp;
+                                <!-- Single button -->
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Kaydet <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <li>
+                                      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= @draftterm.id %>" class="saveDraft">Taslak</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                      <a text-box-id="<%= textbox_counter %>" draftterm-id="<%= @draftterm.id %>" class="saveApproved">Onaylı</a>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <button type="button" class="btn btn-default" onclick="javascript:replaceSelectedText();">
+                                  <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Not ekle
+                                </button>
+                              </div>
+
+                            </div>
+
+                            <div id="content">
+                              <div id="text-wrapper">
+
+                                <div id="textbody<%= textbox_counter %>" class="text-box">
+                                  <p><%= raw @draftterm.content %></p>
+                                </div>
+
+                                <!-- /.panel -->
+                                <% comments=@draftterm.comments %>
+                                <div class="panel panel-default comment <%= comments.count>0 ? "" : 'comment-hide' %>">
+
+                                  <!-- /.panel-heading -->
+                                  <div class="panel-body">
+                                    <hr>
+                                    <%= form_for([@draftterm,Comment.new],method:"post", :html => {:role => 'form'}) do |f| %>
+                                        <div class="form-group form-inline">
+                                          <%= f.text_area :comment, :class => "form-control", style: "min-width:85%;", :rows => "1" %>
+                                          <%= f.hidden_field :draftterm_id, value: @draftterm.id %>
+                                          <%= f.hidden_field :draftagreement_id, value: @draftagreement.id %>
+                                          <%= button_tag(type: 'submit', class: "btn btn-success") do %>
+                                              <i class="fa fa-commenting-o fa-fw fa-1x"></i> Yorum yaz
+                                          <% end %>
+                                        </div>
+                                    <% end %>
+
+
+                                    <% if comments.count>0 %>
+
+                                        <ul class="timeline">
+                                          <% for comment in comments %>
+                                              <li <%= comment.role=="legal" ? ''.html_safe : 'class="timeline-inverted"'.html_safe %>>
+                                                <div <%= comment.role=="legal" ? 'class="timeline-badge warning"'.html_safe : 'class="timeline-badge info"'.html_safe %>>
+                                                  <i class="fa fa-comments"></i>
+                                                </div>
+                                                <div class="timeline-panel">
+                                                  <div class="timeline-heading">
+                                                    <b class="timeline-title"><%= comment.user.name %></b>
+                                                    <small class="text-muted">
+                                                      <i class="fa fa-clock-o"></i> <%= comment.created_at.strftime("%d/%m%Y") %>
+                                                    </small>
+
+                                                  </div>
+                                                  <div class="timeline-body">
+                                                    <p><%= comment.comment %></p>
+                                                  </div>
+                                                </div>
+                                              </li>
+
+                                          <% end %>
+
+                                        </ul>
+                                    <% end %>
+
+                                  </div>
+                                  <!-- /.panel-body -->
+                                </div>
+                                <!-- /.panel -->
+                                <% textbox_counter=textbox_counter+1 %>
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <% x=x+1 %>
+                    &nbsp;
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <% i=i+1 %>
+<% end %>
+<script type="text/javascript">
+    window.tracker = [];
+    $(function () {
+        var text = [];
+        for (i = 0; i < <%=textbox_counter%>; i++) {
+            text[i] = document.getElementById('textbody' + i);
+            window.tracker[i] = new ice.InlineChangeEditor({
+                element: text[i],
+                handleEvents: true,
+                currentUser: {id: <%=User.roles[current_user.role]%>, name: '<%=current_user.name%>'},
+                plugins: ['IceAddTitlePlugin', 'IceSmartQuotesPlugin', 'IceEmdashPlugin', {
+                    name: 'IceCopyPastePlugin',
+                    settings: {
+                        pasteType: 'formattedClean',
+                        preserve: 'p,a[href],i,em,b,span,ul,ol,li,hr'
+                    }
+                }
+                ]
+            }).startTracking();
+        }
+
+    });
+
+    function setUser(el, i) {
+        var name = $(el).find(':selected').data('username');
+        var id = $(el).find(':selected').data('userid');
+        tracker[i].setCurrentUser({id: id, name: name});
+    }
+
+    function toggleApprove(el, i) {
+        if ($(el).prop('checked')) {
+            tracker[i].acceptAll();
+        } else {
+            tracker[i].rejectAll();
+        }
+    }
+
+
+    function toggleDel(el, i) {
+        var body = document.getElementById('textbody' + i);
+        var button = $(el);
+        if ($(body).hasClass('CT-hide')) {
+            $(body).removeClass('CT-hide');
+        } else {
+            $(body).addClass('CT-hide');
+        }
+    }
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#dataTables-terms').DataTable({
+            responsive: false
+        });
+        $('.search-terms').click(function () {
+            var section_id = $(this).attr("section-id");
+            $(".section_id").val(section_id);
+        });
+
+        $(".saveApproved").click(function () {
+            var text_box_id = $(this).attr("text-box-id");
+            tracker[text_box_id].acceptAll();
+            $("div").remove(".popover");
+            $(".note").contents().unwrap("span");
+
+            $.ajax({
+                type: "PUT",
+                url: "/draftterms/" + $(this).attr("draftterm-id"),
+                data: {content: tracker[text_box_id].getCleanContent(), status: "published"},
+                success: function (data) {
+                    $("#notice").html("Madde onaylı şekilde kayıt edilmiştir.");
+                    $("#light-" + text_box_id).removeClass("alert-danger");
+                    $("#light-" + text_box_id).addClass("alert-success");
+                    toggle_agreement_light();
+
+                }
+            });
+        });
+        function toggle_agreement_light() {
+            if ($("i[id^='light'].alert-danger").length > 0 || $("i[id^='light'].alert-success").length == 0) {
+                $("#agreement-light").addClass("alert-danger");
+                $("#agreement-light").removeClass("alert-success");
+                $("#publish_agreement").hide();
+            } else {
+                $("#agreement-light").removeClass("alert-danger");
+                $("#agreement-light").addClass("alert-success");
+                $("#publish_agreement").show();
+            }
+        }
+
+        $(".saveDraft").click(function () {
+            var text_box_id = $(this).attr("text-box-id");
+            $("div").remove(".popover");
+            $.ajax({
+                type: "PUT",
+                url: "/draftterms/" + $(this).attr("draftterm-id"),
+                data: {content: tracker[text_box_id].getElementContent(), status: "open"},
+                success: function (data) {
+                    $("#notice").html("Madde onaylı şekilde kayıt edilmiştir.");
+                    $("#light-" + text_box_id).addClass("alert-danger");
+                    $("#light-" + text_box_id).removeClass("alert-success");
+                    toggle_agreement_light();
+
+                }
+            });
+        });
+
+
+        $('.selectpicker').selectpicker();
+        $(".hidden-button,.comment-hide").hide();
+        $(".comment").attr("style", "border:0px;")
+        toggle_agreement_light();
+        $(".visible-button").hover(function () {
+            $(this).find(".col-lg-11,.comment-hide").show();
+            //$(".hidden-button").show();
+        }, function () {
+            $(this).find(".col-lg-11,.comment-hide").hide();
+            //$(".hidden-button").hide();
+        });
+    });
+</script>
+
+<script>
+
+    function replaceSelectedText() {
+
+        if ($.selection() != "") {
+            var before = "<span style='background-color: yellow;'>"
+            var after = "</span>"
+            document.execCommand('insertHTML', null, before + $.selection("html") + after);
+            $("#notebook").modal("show");
+        } else {
+            alert("Yazının ilgili bölümünü seçin.");
+        }
+    }
+    $(document).ready(function () {
+        $(document).on('click', 'span.note', function (e) {
+            spn = $(this);
+            var note_id = $(this).attr("note-id");
+            $.ajax({
+                url: "/draftagreements/" + note_id + "/get_note",
+                dataType: "json",
+                data: {},
+                success: function (note) {
+
+                    var popover = $.parseHTML('<div class="note-content" ><div>' + note.content + '</div><hr> <p class="text-muted small">' + note.creator + ' tarafından eklendi.</p> </div>');
+                    spn.popover({
+                        html: true,
+                        content: function () {
+                            return popover;
+                        },
+                        title: function () {
+                            return $.parseHTML('<i class="fa fa-exclamation-circle" aria-hidden="true"></i> Uyarı');
+                        }
+                    });
+                }
+            });
+
+        });
+
+
+        $('#notebook').on('hidden.bs.modal', function () {
+            $("div.text-box").find("span[style='background-color: yellow;']").contents().unwrap();
+        });
+
+        $("#notesave").click(function () {
+            $.ajax({
+                url: "<%=draftagreement_add_note_path(@draftagreement)%>",
+                dataType: "json",
+                data: {content: $("#thenote").val()},
+                success: function (note) {
+                    $("div.text-box").find("span[style='background-color: yellow;']").contents().wrap("<span id='note-" + note.id + "' note-id='" + note.id + "' class='note'></span>");
+                    $("#notebook").modal("hide");
+                }
+            });
+
+        });
+    });
+</script>
+
+
+
+
+
+

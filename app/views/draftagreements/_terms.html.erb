@@ -1,0 +1,38 @@
+<% for tmp in @templates %>
+    <tr class="odd gradeX">
+      <td>
+        <div class="div-text">
+          <%= raw tmp.content %>
+        </div>
+      </td>
+      <td>
+        <div class="div-text">
+          <%= raw tmp.subject %>
+        </div>
+      </td>
+      <td>
+        <div class="div-text">
+          <%= raw tmp.keywords %>
+        </div>
+      </td>
+      <td><%= User.find(tmp.user_id).name %></td>
+      <!--<td class="center"><%= tmp.created_at.strftime("%d/%m/%Y") %></td>-->
+      <td class="center">
+        <%= form_for(@draftterm, :html => {:role => 'form'}) do |f| %>
+            <div class="panel-body">
+
+              <%= f.hidden_field :draftagreement_id, :value => @draftagreement.id %>
+              <%= f.hidden_field :draftsection_id, :class => "section_id" %>
+              <div class="input-group">
+                <%= f.hidden_field :content, :value => raw(tmp.content) %>
+
+
+                <%= f.submit 'Madde ekle ', :class => 'btn  btn-success right' %>
+
+              </div><!-- /input-group -->
+            </div>
+        <% end %>
+      </td>
+
+    </tr>
+<% end %>

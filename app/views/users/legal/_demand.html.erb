@@ -1,0 +1,103 @@
+<!-- /.panel -->
+<div class="chat-panel panel panel-default">
+  <div class="panel-heading">
+    <i class="fa fa-envelope-open-o fa-fw"></i> Talep
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-chevron-down"></i>
+      </button>
+      <ul class="dropdown-menu slidedown">
+        <li>
+          <a href="#">
+            <i class="fa fa-refresh fa-fw"></i> Refresh
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-check-circle fa-fw"></i> Available
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-times fa-fw"></i> Busy
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-clock-o fa-fw"></i> Away
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="#">
+            <i class="fa fa-sign-out fa-fw"></i> Sign Out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <%
+    def time_diff(start_time, end_time)
+      seconds_diff = (start_time - end_time).to_i.abs
+
+      hours = seconds_diff / 3600
+      seconds_diff -= hours * 3600
+
+      minutes = seconds_diff / 60
+      seconds_diff -= minutes * 60
+
+      seconds = seconds_diff
+
+      "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}"
+    end
+  %>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <ul class="chat">
+      <%i=0%>
+      <%@demands=Demand.where(["company_id=? and to_role=? and status=?",current_user.company_id,User.roles[current_user.role],0])%>
+      <% for demand in @demands %>
+          <% i=i+1 %>
+          <%
+            if i%2==0 then
+              side="left"
+              pull="right"
+            else
+              side="right"
+              pull="left"
+            end
+          %>
+          <li class="<%= side %> clearfix">
+        <span class="chat-img pull-<%= side %>">
+            <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle"/>
+        </span>
+            <div class="chat-body clearfix">
+              <div class="header">
+                <strong class="primary-font"><%= User.find(demand.user_id).name %></strong>
+                <small class="pull-right text-muted">
+                  <i class="fa fa-clock-o fa-fw"></i> <%= (Time.now).strftime("%d gün %t saat önce") %>
+                </small>
+              </div>
+
+                <%=raw demand.content %>
+
+            </div>
+          </li>
+
+      <% end %>
+    </ul>
+  </div>
+  <!-- /.panel-body -->
+  <div class="panel-footer">
+    <div class="input-group">
+      <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..."/>
+      <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat">
+                                        Send
+                                    </button>
+                                </span>
+    </div>
+  </div>
+  <!-- /.panel-footer -->
+</div>
+<!-- /.panel .chat-panel -->

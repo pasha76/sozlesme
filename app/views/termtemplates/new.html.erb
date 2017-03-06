@@ -1,0 +1,163 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Sözleşme maddesi hazırla</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-10">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Sözleşme maddesi tanımla
+      </div>
+      <%= form_for(@template, :html => {:role => 'form'}) do |f| %>
+          <div class="panel-body">
+
+
+            <div class="form-group">
+              <div class="panel panel-default">
+
+                <div class="panel-body">
+
+
+                  <div>
+                    <div class="row">
+                      <div class="col-lg-12" style="margin-bottom: 5px">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default">
+                            <i onclick="document.execCommand('bold', null, false);" class="fa fa-bold" aria-hidden="true"></i>
+                          </button>
+                          <button type="button" class="btn btn-default">
+                            <i onclick="document.execCommand('italic', null, false);" class="fa fa-italic" aria-hidden="true"></i>
+                          </button>
+                          <button type="button" class="btn btn-default">
+                            <i onclick="document.execCommand('underline', null, false);" class="fa fa-underline" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        &nbsp;
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default">
+                            <i onclick="document.execCommand('formatBlock', null, '<h2>');" class="fa fa-header" aria-hidden="true"></i>
+                          </button>
+                          <button type="button" class="btn btn-default">
+                            <i onclick="document.execCommand('formatBlock', null, '<p>');" class="fa fa-paragraph" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        &nbsp;
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default" onclick="document.execCommand('indent', null, false);">
+                            <i class="fa fa-indent" aria-hidden="true"></i></button>
+                          <button type="button" class="btn btn-default" onclick="document.execCommand('outdent', null, false);">
+                            <i class="fa fa-outdent" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        &nbsp;
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default" onclick="document.execCommand('InsertUnorderedList', null, false);">
+                            <i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                          <button type="button" class="btn btn-default" onclick="document.execCommand('InsertOrderedList', null, false);">
+                            <i class="fa fa-list-ol" aria-hidden="true"></i></button>
+
+                        </div>
+                        &nbsp;
+                        <div class="btn-group" role="group" aria-label="...">
+                          <input onchange="javascript:toggleDel(this)" class="btn btn-default" type="checkbox" data-toggle="toggle" data-off="Geçmişi göster" data-on="Şimdiki hali">
+
+                          <select onchange="setUser(this)" class="hide">
+                            <option data-userid="11" data-username="Geoffrey Jellineck">Geoffrey Jellineck</option>
+                            <option data-userid="22" data-username="Chuck Noblet">Chuck Noblet</option>
+                            <option data-userid="33" data-username="Jerri Blank">Jerri Blank</option>
+                          </select>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div id="content">
+                  <div id="text-wrapper">
+
+                    <div id="textbody" class="text-box">
+
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <%= f.hidden_field :content, :autofocus => true, class: 'form-control ' %>
+
+            <div class="form-group">
+              <%= f.label :subject, "Konusu" %>
+              <%= f.text_area :subject, :autofocus => true, class: 'form-control ' %>
+            </div>
+            <div class="form-group">
+              <%= f.label :keywords, "Anahtar kelimeler" %>
+              <%= f.text_area :keywords, :autofocus => true, class: 'form-control ' %>
+            </div>
+
+
+          </div>
+          <div class="panel-footer">
+            <%= f.submit ' Kaydet  ', :class => 'btn btn-success right' %>
+          </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        text = document.getElementById('textbody');
+        window.tracker = new ice.InlineChangeEditor({
+            element: text,
+            handleEvents: true,
+            currentUser: {id: <%=User.roles[current_user.role]%>, name: "<%=current_user.name%>"},
+            plugins: ['IceAddTitlePlugin', 'IceSmartQuotesPlugin', 'IceEmdashPlugin', {
+                name: 'IceCopyPastePlugin',
+                settings: {
+                    pasteType: 'formattedClean',
+                    preserve: 'p,a[href],i,em,b,span,ul,ol,li,hr'
+                }
+            }
+            ]
+        }).startTracking();
+
+
+    });
+
+    function setUser(el) {
+        var name = $(el).find(':selected').data('username');
+        var id = $(el).find(':selected').data('userid');
+        tracker.setCurrentUser({id: id, name: name});
+    }
+
+    function toggleDel(el) {
+        var body = document.getElementById('textbody');
+        var button = $(el);
+        if ($(body).hasClass('CT-hide')) {
+            $(body).removeClass('CT-hide');
+        } else {
+            $(body).addClass('CT-hide');
+        }
+    }
+
+
+    $(document).ready(function () {
+
+
+        $('#new_termtemplate').submit(function () {
+            tracker.acceptAll();
+            $("#termtemplate_content").val(tracker.getCleanContent());
+        });
+
+
+    });
+</script>
