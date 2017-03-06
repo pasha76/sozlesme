@@ -22,6 +22,8 @@ test:
 
 production:
   <<: *default
-  database: postgresql-amorphous-20174
-  username: mogffszalsiier
-  password: 4e36715334200ed4fb357965a8a80d23ffe34b05d002faef950eb8bfe2621e79
+  url: <%= ENV['DATABASE_URL'] %>
+  adapter: postgresql
+  database: db4pmbq8lsn2q0
+  pool: 5
+  timeout: 5000
