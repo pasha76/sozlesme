@@ -24,6 +24,6 @@ production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
   adapter: postgresql
-  database: db4pmbq8lsn2q0
+  database: postgresql-amorphous-20174
   pool: 5
   timeout: 5000
