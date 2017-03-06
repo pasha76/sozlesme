@@ -21,5 +21,7 @@ test:
   database: db/test.sqlite3
 
 production:
-  encoding: utf8
-  pool: 15
+  <<: *default
+  database: postgresql-amorphous-20174
+  username: mogffszalsiier
+  password: 4e36715334200ed4fb357965a8a80d23ffe34b05d002faef950eb8bfe2621e79
